@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
+
+:root {
+  --bg-color: transparent;
+  --text-main: #fff;
+  --accent-primary: #f06c4b;
+  --accent-secondary: #eb8b74;
+  --card-bg: rgba(30, 30, 30, 0.7);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --card-blur: 20px;
+  --font-main: 'Fredoka', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-timer: 'JetBrains Mono', monospace;
+  --btn-bg: rgba(255,255,255,0.15);
+}
+
+[data-theme='hacker'] {
+  --text-main: #0f0;
+  --accent-primary: #0f0;
+  --accent-secondary: #0a0;
+  --card-bg: rgba(0, 20, 0, 0.85);
+  --card-border: rgba(0, 255, 0, 0.5);
+  --card-blur: 8px;
+}
+
+[data-theme='minimal'] {
+  --text-main: #222;
+  --accent-primary: #4a90e2;
+  --accent-secondary: #a3c4f3;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(0, 0, 0, 0.1);
+  --btn-bg: rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0; padding: 0;
+  font-family: var(--font-main);
+  color: var(--text-main);
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+
+#root { width: 100vw; height: 100vh; }
+
+.app-container {
+  width: 100%; height: 100%;
+  pointer-events: none; /* Let clicks pass to webview underneath where the widget isn't! */
+  background-color: #0f0f0f; /* Dark background to prevent white flashes */
+}
+
+/* BACKGROUNDS */
+.background-layer {
+  position: absolute;
+  top: 32px; 
+  left: 0;
+  width: 100%;
+  height: calc(100% - 32px);
+  object-fit: cover;
+  z-index: 10;
+  pointer-events: auto; /* Catch clicks for YouTube! */
+}
+img.background-layer { pointer-events: none; }
+.theme-bg { background: var(--card-bg); pointer-events: auto; }
+.transparent-bg { background: transparent; }
+
+/* TITLE BAR (DRAGGABLE WINDOW) */
+.title-bar {
+  width: 100%; height: 32px; background: rgba(0,0,0,0.8);
+  display: flex; justify-content: space-between; align-items: center;
+  -webkit-app-region: drag; z-index: 100; pointer-events: auto;
+}
+.title-drag-area { flex: 1; padding-left: 15px; font-weight: 600; font-size: 0.8rem; color: #fff; }
+.window-controls { -webkit-app-region: no-drag; display: flex; height: 100%; }
+.ctrl-btn { background: transparent; border: none; color: #fff; width: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s; }
+.ctrl-btn:hover { background: rgba(255,255,255,0.2); }
+.close-btn-w:hover { background: #e81123; }
+
+/* WIDGET CARD (React Draggable inside app window) */
+.widget-card {
+  width: 320px;
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--card-blur));
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex; flex-direction: column; align-items: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  /* React draggable handles movement now, no more -webkit-app-region */
+}
+
+.drag-handle {
+  cursor: grab;
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
+.no-drag {
+  cursor: default;
+}
+
+/* TOP BAR (Inside the widget) */
+.widget-top-bar {
+  width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
+}
+.brand-title { font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; opacity: 0.8; }
+.top-controls { display: flex; gap: 8px; }
+.tiny-ctrl {
+  background: transparent; border: none; color: var(--text-main);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; opacity: 0.6; transition: 0.2s;
+  border-radius: 50%; width: 24px; height: 24px;
+}
+.tiny-ctrl.hover-op:hover { background: var(--btn-bg); opacity: 1; }
+
+/* TABS */
+.state-tabs { display: flex; gap: 6px; background: var(--btn-bg); padding: 5px; border-radius: 12px; }
+.tab-btn {
+  background: transparent; border: none; color: var(--text-main);
+  padding: 6px 10px; border-radius: 8px; font-family: var(--font-main);
+  font-weight: 600; font-size: 0.8rem; cursor: pointer; opacity: 0.7; transition: 0.2s;
+}
+.tab-btn.active { background: var(--accent-primary); color: #fff; opacity: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+/* CIRCULAR timer */
+.progress-ring-container {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  width: 220px; height: 220px; margin: 20px 0;
+}
+.timer-display-inner {
+  position: absolute; font-family: var(--font-timer); font-size: 3.5rem; line-height: 1;
+  font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* CONTROLS */
+.widget-controls { display: flex; gap: 15px; margin-bottom: 20px; }
+.play-btn {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--accent-primary); color: #fff; border: none;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.15s;
+}
+.play-btn:active { transform: scale(0.92); }
+.icon-btn {
+  width: 44px; height: 44px; border-radius: 14px;
+  background: var(--btn-bg); color: var(--text-main); border: none;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+}
+.icon-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* FOOTER */
+.widget-footer {
+  width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 5px;
+}
+.streak-badge { background: var(--btn-bg); padding: 6px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; }
+.footer-icons { display: flex; gap: 8px; }
+.footer-icons .icon-btn { width: 34px; height: 34px; border-radius: 10px; }
+
+
+/* ===========================
+   MINI MODE WIDGET (PILL)
+   =========================== */
+.mini-widget-card {
+  width: 220px; height: 60px;
+  background: var(--card-bg); backdrop-filter: blur(var(--card-blur)); -webkit-backdrop-filter: blur(var(--card-blur));
+  border: 1px solid var(--card-border); border-radius: 30px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 10px 0 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.mini-info { display: flex; align-items: center; gap: 10px; flex: 1; }
+.mini-dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 8px rgba(0,0,0,0.5); }
+.mini-time { font-family: var(--font-timer); font-size: 1.4rem; font-weight: 700; color: var(--text-main); }
+.mini-controls { display: flex; gap: 8px; }
+.mini-btn { width: 38px; height: 38px; border-radius: 19px; }
+.mini-btn.primary { background: var(--accent-primary); color: #fff; }
+
+
+/* MODALS */
+.modal-overlay {
+  position: absolute; top:32px; left:0; width: 100%; height: calc(100% - 32px);
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; pointer-events: auto;
+}
+.modal-content {
+  background: var(--card-bg); border: 1px solid var(--card-border); padding: 25px;
+  border-radius: 18px; width: 90%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); pointer-events: auto;
+}
+.modal-content h3 { margin: 0; font-size: 1.1rem; }
+.close-btn { background: transparent; border: none; color: var(--text-main); cursor: pointer; }
+.settings-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px; }
+.settings-group label { font-size: 0.85rem; font-weight: 600; opacity: 0.8; }
+.settings-group input, .settings-group select {
+  background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: var(--text-main);
+  padding: 8px; border-radius: 6px; font-family: inherit; font-size: 0.9rem;
+}
+.settings-group input:focus { outline: none; border-color: var(--accent-primary); }
+.glow-btn { background: var(--accent-primary); color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
