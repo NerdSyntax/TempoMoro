@@ -22,4 +22,3 @@ La aplicación divide el tiempo en intervalos de enfoque y de pausa.
 Características integradas:
 - **Temporizador ajustable:** Puedes configurar los minutos exactos tanto para los bloques de trabajo como para los descansos.
 - **Reproductor de YouTube:** Incluye un reproductor básico donde puedes pegar un enlace y escuchar un video o música de fondo.
-- **Bloqueador de aplicaciones:** Una opción para cerrar forzosamente otros programas (por ejemplo, juegos) mientras dura el tiempo de enfoque, ayudando a evitar distracciones.
